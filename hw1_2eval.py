@@ -204,7 +204,7 @@ test_loss=[]
 test_iou=[]
 masks=[]
 
-for batch in tqdm(test_loader):
+for batch in test_loader:
 
     inputs, labels = batch
     
