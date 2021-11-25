@@ -18,7 +18,13 @@ from PIL import Image
 from torch.utils.data import ConcatDataset, DataLoader, Subset
 from torchvision.datasets import DatasetFolder
 import os
+import shutil
 
+
+
+if os.path.isdir('realval_dataset'):
+  shutil.rmtree('realval_dataset')
+  
 os.makedirs('realval_dataset')
 for ii in range(50):
   os.makedirs('realval_dataset/'+str(ii))
@@ -26,7 +32,7 @@ for ii in range(50):
 for l in os.listdir(test_dir):
   a=l.strip('.png')
   b,c=a.split('_')
-  os.rename(test_dir+'/'+str(l),'realval_dataset/'+b+'/'+str(l))
+  shutil.copyfile(test_dir+'/'+str(l),'realval_dataset/'+b+'/'+str(l))
 
 
 train_tfm = transforms.Compose([
@@ -45,7 +51,7 @@ train_tfm = transforms.Compose([
 
 
 test_tfm = transforms.Compose([
-    transforms.Resize((224, 224)),
+    transforms.Resize((128,128)),
     transforms.ToTensor(),
 ])
 
@@ -110,8 +116,6 @@ class d201m(nn.Module):
       return x
 
 """## **Training**
-
-
 """
 
 # "cuda" only when GPUs are available.
@@ -189,6 +193,3 @@ with open(out_file, "w") as f:
     f.write("image_id,label\n")
     for i, pred in  enumerate(predictions):
          f.write(f"{filenames[i]},{pred}\n")
-
-
-         
